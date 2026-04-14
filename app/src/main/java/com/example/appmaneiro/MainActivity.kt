@@ -32,56 +32,47 @@ import androidx.compose.foundation.background
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.draw.clip
 import kotlinx.coroutines.delay
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            // 1. Estado da tela
             var telaAtual by remember { mutableStateOf("loading") }
-
-            // 2. Timer apenas para sair do Loading
             LaunchedEffect(Unit) {
                 delay(3000)
                 telaAtual = "segunda"
-                // Removi o segundo delay para o botão ser o único a levar à terceira tela
             }
-
-            // 3. O 'when' controla TUDO. Não precisa de 'if' embaixo.
             when (telaAtual) {
                 "loading" -> {
-                    TelaLoading()
+                    TelaDeLoading()
                 }
                 "segunda" -> {
                     SegundaTela(onProximoClick = { telaAtual = "terceira" })
                 }
                 "terceira" -> {
-                    TerceiraTela()
+                    HubPrincipal()
                 }
             }
         }
     }
 }
-
-// --- FUNÇÕES DAS TELAS ---
-
 @Composable
-fun TelaLoading() {
+fun TelaDeLoading() { // --- FUNÇÕES DAS TELAS ---
     Column(
         modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Juju2D sem aura",
-            fontSize = 40.sp,
+            text = "Biko App",
+            fontSize = 60.sp,
             color = Color.Red,
             fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(bottom = 16.dp)
+            modifier = Modifier.padding(bottom = 16.dp),
+            fontStyle = androidx.compose.ui.text.font.FontStyle.Italic
         )
         Image(
-            painter = painterResource(id = R.drawable.gato),
-            contentDescription = "Gato",
+            painter = painterResource(id = R.drawable.biko),
+            contentDescription = "Biko",
             modifier = Modifier.size(200.dp),
         )
     }
@@ -146,163 +137,226 @@ fun SegundaTela(onProximoClick: () -> Unit) {
 }
 
 @Composable
-fun TerceiraTela() {
+fun HubPrincipal() {
+    val BlueHeader = Color(0xFF255EE6)
+    val Background = Color(0xFFF2F5FA)
+    val OrangeBanner = Color(0xFFF09A00)
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .background(Background)
     ) {
-        val Red = Color(0xFF8A9A5B)
-        val lightRed = Color(0xFF32CD32)
-
-        // Top bar
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .clip(RoundedCornerShape(50))
-                .background(Red)
-                .padding(horizontal = 24.dp, vertical = 16.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            Text(
-                text = "Olá, ",
-                fontSize = 24.sp,
-                fontWeight = FontWeight.Medium,
-                color = Color.Black
-            )
-            Icon(
-                imageVector = Icons.Default.Settings,
-                contentDescription = "Settings",
-                modifier = Modifier.size(28.dp),
-                tint = Color.Black
-            )
-        }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        // Search bar
-        Row(
-            modifier = Modifier
-                .fillMaxWidth(0.9f)
-                .clip(RoundedCornerShape(50))
-                .background(Red)
-                .padding(horizontal = 16.dp, vertical = 12.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            Icon(
-                imageVector = Icons.Default.Search,
-                contentDescription = "Search",
-                modifier = Modifier.size(24.dp),
-                tint = Color.Black
-            )
-            Spacer(modifier = Modifier.width(8.dp))
-            Text(
-                text = "O que precisas?",
-                fontSize = 18.sp,
-                color = Color.Gray
-            )
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Destaques
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = lightRed)
-                .padding(vertical = 16.dp),
-            contentAlignment = Alignment.Center
-        ) {
-            Text(
-                text = "!!!!!DESTAQUES!!!!!",
-                fontSize = 26.sp,
-                color = Color.Black
-            )
-        }
-
-        Spacer(modifier = Modifier.height(24.dp))
-
-        // Categories
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-            CategoryCircle("Cupons", lightRed)
-            CategoryCircle("Ultimos\nServiços", lightRed)
-            CategoryCircle("Favoritos", lightRed)
-            CategoryCircle("Promoções", lightRed)
-        }
-
-        Spacer(modifier = Modifier.height(32.dp))
-
-        // Services
+        // Header Azul
         Column(
-            modifier = Modifier.fillMaxWidth(),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            modifier = Modifier
+                .fillMaxWidth()
+                .clip(RoundedCornerShape(bottomStart = 24.dp, bottomEnd = 24.dp))
+                .background(BlueHeader)
+                .padding(24.dp)
         ) {
-            ServiceItem("Jardineiro", Icons.Default.Home, lightRed)
-            ServiceItem("Encanador", Icons.Default.Build, lightRed)
-            ServiceItem("Eletricista", Icons.Default.Warning, lightRed)
-            ServiceItem("Barbeiro", Icons.Default.Face, lightRed)
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Column {
+                    Text(
+                        text = "Olá,  \uD83D\uDC4B",
+                        color = Color.White,
+                        fontSize = 22.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "O que você precisa hoje?",
+                        color = Color.White.copy(alpha = 0.8f),
+                        fontSize = 14.sp
+                    )
+                }
+                Box(
+                    modifier = Modifier
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(Color.White.copy(alpha = 0.2f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = "Configurações",
+                        tint = Color.White,
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // Barra de pesquisa
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(50))
+                    .background(Color.White.copy(alpha = 0.2f))
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Search,
+                    contentDescription = "Search",
+                    tint = Color.Cyan,
+                    modifier = Modifier.size(20.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text(
+                    text = "O que precisas?",
+                    color = Color.White.copy(alpha = 0.8f),
+                    fontSize = 14.sp
+                )
+            }
+        }
+
+        // Conteúdo com Scroll
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 24.dp)
+                .weight(1f)
+        ) {
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Banner Destaques
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clip(RoundedCornerShape(16.dp))
+                    .background(OrangeBanner)
+                    .padding(16.dp),
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                Column {
+                    Text(
+                        text = "\uD83C\uDF89 Destaques da semana",
+                        color = Color.Black,
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 16.sp
+                    )
+                    Text(
+                        text = "Ofertas especiais para você",
+                        color = Color.Black.copy(alpha = 0.7f),
+                        fontSize = 12.sp
+                    )
+                }
+                Button(
+                    onClick = { /*TODO*/ },
+                    colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = BlueHeader),
+                    contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+                    modifier = Modifier.height(32.dp)
+                ) {
+                    Text("VER", fontSize = 12.sp, color = Color.White)
+                }
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // Chips
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween
+            ) {
+                CategoryPill("Todos", true)
+                CategoryPill("Cupons", false)
+                CategoryPill("Últimos", false)
+                CategoryPill("Favoritos", false)
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                text = "Serviços disponíveis",
+                fontWeight = FontWeight.Bold,
+                fontSize = 18.sp,
+                color = Color.Black
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Lista de Serviços
+            Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                ServiceListItem("Jardineiro", "Poda, limpeza, paisagismo", "🌿")
+                ServiceListItem("Encanador", "Reparos, instalações", "🔧")
+                ServiceListItem("Eletricista", "Elétrica residencial", "⚡")
+                ServiceListItem("Barbeiro", "Corte, barba, acabamento", "✂️")
+            }
         }
     }
 }
-
 @Composable
-fun CategoryCircle(label: String, color: Color) {
+fun CategoryPill(label: String, isSelected: Boolean) {
     Box(
         modifier = Modifier
-            .size(80.dp)
-            .clip(CircleShape)
-            .background(color),
-        contentAlignment = Alignment.Center
+            .clip(RoundedCornerShape(50))
+            .background(if (isSelected) Color(0xFF255EE6) else Color.White)
+            .border(
+                width = 1.dp,
+                color = if (isSelected) Color.Transparent else Color(0xFFE0E0E0),
+                shape = RoundedCornerShape(50)
+            )
+            .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Text(
             text = label,
-            fontSize = 12.sp,
-            color = Color.Black,
-            textAlign = TextAlign.Center
+            color = if (isSelected) Color.White else Color(0xFF255EE6),
+            fontSize = 13.sp,
+            fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal
         )
     }
 }
-
 @Composable
-fun ServiceItem(name: String, icon: androidx.compose.ui.graphics.vector.ImageVector, bgColor: Color) {
+fun ServiceListItem(title: String, subtitle: String, emoji: String) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp)
-            .border(1.dp, Color.Gray)
+            .clip(RoundedCornerShape(16.dp))
             .background(Color.White)
+            .border(1.dp, Color(0xFFE0E0E0), RoundedCornerShape(16.dp))
+            .padding(16.dp),
+        verticalAlignment = Alignment.CenterVertically
     ) {
         Box(
             modifier = Modifier
-                .fillMaxHeight()
-                .aspectRatio(1f)
-                .border(1.dp, Color.Gray),
+                .size(48.dp)
+                .clip(RoundedCornerShape(12.dp))
+                .background(Color(0xFFF2F5FA)),
             contentAlignment = Alignment.Center
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = name,
-                modifier = Modifier.size(32.dp),
-                tint = Color.Black
-            )
+            Text(text = emoji, fontSize = 24.sp)
         }
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(bgColor)
-                .border(1.dp, Color.Gray),
-            contentAlignment = Alignment.Center
-        ) {
+        
+        Spacer(modifier = Modifier.width(16.dp))
+        
+        Column(modifier = Modifier.weight(1f)) {
             Text(
-                text = name,
-                fontSize = 20.sp,
+                text = title,
+                fontWeight = FontWeight.Bold,
+                fontSize = 16.sp,
                 color = Color.Black
             )
+            Text(
+                text = subtitle,
+                fontSize = 13.sp,
+                color = Color.Gray
+            )
+        }
+        
+        Box(
+            modifier = Modifier
+                .size(32.dp)
+                .clip(CircleShape)
+                .background(Color(0xFFF2F5FA)),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(text = "›", fontSize = 18.sp, color = Color(0xFF255EE6))
         }
     }
 }
